@@ -38,8 +38,6 @@ function startScreen() {
     logo.classList.add("animate__backInDown");
     startButton.classList.add("start");
     startButton.classList.add("animate__animated");
-    // startButton.classList.add("animate__bounce");
-    // startButton.classList.add("animate__shakeX");
     buttonTimerId = setInterval(() => {
         startButton.classList.toggle("animate__rubberBand");
     }, 2000);
