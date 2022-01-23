@@ -16,12 +16,17 @@ let platforms = [];
 let buttonTimerId;
 let upTimerId;
 let downTimerId;
-let platformWidth = 70;
+let platformWidth = 65;
 let currentHeight;
 let isJumping = false;
-
-function getRandom() {
+let jumpSound = new Audio("./assets/jump-arcade.mp3");
+jumpSound.volume = 0.5;
+function getRandomPad() {
     return Math.floor(Math.random() * 4) + 1;
+}
+
+function randomX() {
+    return Math.floor(Math.random() * 315);
 }
 
 function hideAndStart() {
@@ -54,7 +59,7 @@ function createScoreboard() {
 }
 
 function createDoodler() {
-    doodler.innerHTML = "<img src='./assets/doodler.png' width='100%'>";
+    doodler.innerHTML = "<img src='./assets/DoodlerR.png' width='100%'>";
     doodler.classList.add("doodler");
     grid.appendChild(doodler);
     doodler.style.left = `${doodlerLeft}px`;
@@ -87,14 +92,24 @@ function moveDoodler(e) {
     if (doodlerLeft >= 0) {
         if (e.key === "ArrowLeft") {
             doodlerLeft -= 5;
+            createDoodler();
+            doodler.firstElementChild.setAttribute(
+                "src",
+                "./assets/DoodlerL.png"
+            );
         }
     }
     if (doodlerLeft < 342) {
         if (e.key === "ArrowRight") {
             doodlerLeft += 5;
+            createDoodler();
+            doodler.firstElementChild.setAttribute(
+                "src",
+                "./assets/DoodlerR.png"
+            );
         }
     }
-    createDoodler();
+    // createDoodler();
 }
 
 function movePlatforms() {
@@ -129,6 +144,8 @@ function jump() {
         clearInterval(downTimerId);
         currentHeight = doodlerBottom;
         isJumping = true;
+        jumpSound.play();
+
         upTimerId = setInterval(function () {
             doodlerBottom += 20;
             doodler.style.bottom = doodlerBottom + "px";
@@ -143,7 +160,7 @@ function onPlatform() {
         if (
             doodlerBottom >= platform.bottom &&
             doodlerBottom <= platform.bottom + 15 &&
-            doodlerLeft + 30 >= platform.left &&
+            doodlerLeft + 40 >= platform.left &&
             doodlerLeft <= platform.left + platformWidth &&
             !isJumping
         ) {
@@ -151,7 +168,7 @@ function onPlatform() {
             score += 100;
             createScoreboard();
         }
-
+        // Reset platform  Add random x later
         if (platform.bottom < 0) {
             platform.bottom = 650;
         }
